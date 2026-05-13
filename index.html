@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nx3y</title>
-  <!-- Fontes mantidas pela estética clássica -->
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
@@ -68,7 +67,7 @@
     .hero-title { font-family: 'Cinzel'; font-size: clamp(3rem, 8vw, 6rem); line-height: 1; margin-bottom: 1rem; }
     .hero-desc { font-family: 'IM Fell English'; font-style: italic; font-size: 1.5rem; color: var(--dim); max-width: 600px; }
 
-    /* DICAR Methodology - O Coração do Portfólio */
+    /* DICAR Methodology */
     .dicar-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -218,13 +217,39 @@
   <section id="arsenal" style="border: none;">
     <h2 style="font-family: 'Cinzel'; color: var(--accent); margin-bottom: 3rem;">03. The Arsenal</h2>
     <div class="tool-list">
-      <div class="tool-category">
-        <h4>Intelligence</h4>
-        <div class="tool-tags">
-          <span class="tag">Shodan</span> <span class="tag">Maltego</span> <span class="tag">Spiderfoot</span>
-          <span class="tag">Blackbird</span> <span class="tag">Social Analyzer</span>
-        </div>
-      </div>
+  <!-- VETOR: WEB & SEARCH -->
+  <div class="tool-category">
+    <h4>Search Intelligence</h4>
+    <div class="tool-tags">
+      <span class="tag">Google Dorking</span> 
+      <span class="tag">Reverse Image Search</span>
+      <span class="tag">Yandex/PimEyes</span>
+      <span class="tag">Wayback Machine</span>
+    </div>
+  </div>
+
+  <!-- VETOR: IDENTITY & SOCIAL -->
+  <div class="tool-category">
+    <h4>Identity Correlation (SOCMINT)</h4>
+    <div class="tool-tags">
+      <span class="tag">Sherlock</span> 
+      <span class="tag">Maigret</span>
+      <span class="tag">Leak Databases</span>
+      <span class="tag">Username Correlation</span>
+    </div>
+  </div>
+
+  <!-- VETOR: INFRASTRUCTURE -->
+  <div class="tool-category">
+    <h4>Network & Infrastructure</h4>
+    <div class="tool-tags">
+      <span class="tag">WHOIS/DNS Recon</span> 
+      <span class="tag">ViewDNS</span>
+      <span class="tag">Censys</span>
+      <span class="tag">Hunter.io (Email Discovery)</span>
+    </div>
+  </div>
+</div>
       <div class="tool-category">
         <h4>Technical Stack</h4>
         <div class="tool-tags">
@@ -274,13 +299,12 @@
     
     <div style="text-align: right;">
       <p style="font-size: 0.6rem; opacity: 0.6; text-transform: uppercase;">Development Credits</p>
-      <p style="font-size: 0.7rem;">Architected by <span style="color: var(--accent);">Nx3y</span> & <span style="color: var(--accent);">Gemini</span></p>
+      <p style="font-size: 0.7rem;">Architected by <span style="color: var(--accent);">Nx3y</span></p>
     </div>
   </div>
 </footer>
 
 <script>
-  // Um pequeno toque de interação: efeito de revelar ao scroll
   const observerOptions = { threshold: 0.1 };
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
