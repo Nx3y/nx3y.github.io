@@ -1,7 +1,6 @@
 # 📂 CASE FILE: Nx3y // Digital Investigator
 
 <p align="center">
-  <img src="https://nx3y.github.io/path-to-your-logo.png" alt="Nx3y Logo" width="200">
   <br>
   <b>Digital Investigation | OSINT • Data Correlation • Open Source Intelligence</b>
   <br>
