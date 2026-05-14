@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nx3y</title>
-  
   <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Share+Tech+Mono&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
-  
+
   <style>
     :root {
       --soot: #0a0a09;
@@ -14,12 +13,13 @@
       --accent: #b8962e;
       --dim: #5c5548;
       --line: rgba(184, 150, 46, 0.15);
+      --line-hover: rgba(184, 150, 46, 0.4);
       --success: #4a8a4a;
     }
 
-    /* Reset & Base */
     *, *::after, *::before { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
+
     body {
       background-color: var(--soot);
       color: var(--paper);
@@ -28,7 +28,6 @@
       overflow-x: hidden;
     }
 
-    /* Camada de Textura (Sutil) */
     body::before {
       content: '';
       position: fixed;
@@ -38,81 +37,274 @@
       z-index: 1000;
     }
 
-    /* Nav Refinada */
+    /* ─── NAV ─── */
     nav {
       position: fixed;
-      top: 0; width: 100%;
+      top: 0;
+      width: 100%;
       height: 60px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0 5%;
-      background: rgba(10, 10, 9, 0.95);
+      background: rgba(10, 10, 9, 0.96);
       border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(5px);
-      z-index: 100;
+      backdrop-filter: blur(8px);
+      z-index: 500;
+      gap: 1rem;
     }
 
-    .nav-logo { font-family: 'Cinzel'; font-weight: 700; color: var(--accent); text-decoration: none; letter-spacing: 2px; }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { text-decoration: none; color: var(--dim); font-size: 0.75rem; text-transform: uppercase; transition: 0.3s; }
+    .nav-logo {
+      font-family: 'Cinzel';
+      font-weight: 700;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 2px;
+      flex-shrink: 0;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--dim);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: color 0.3s;
+    }
     .nav-links a:hover { color: var(--accent); }
 
-    /* Layout */
+    /* Language Toggle */
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border: 1px solid var(--line-hover);
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--dim);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      padding: 4px 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      letter-spacing: 1px;
+    }
+
+    .lang-btn.active {
+      background: var(--accent);
+      color: var(--soot);
+    }
+
+    .lang-btn:hover:not(.active) { color: var(--paper); }
+
+    .nav-status {
+      font-size: 0.6rem;
+      color: var(--success);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* Hamburger */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--dim);
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
+
+    .nav-hamburger.open span:nth-child(1) { transform: rotate(45deg) translate(4.5px, 4.5px); background: var(--accent); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: rotate(-45deg) translate(4.5px, -4.5px); background: var(--accent); }
+
+    /* Mobile Drawer */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      width: 100%;
+      background: rgba(10, 10, 9, 0.98);
+      border-bottom: 1px solid var(--line);
+      padding: 1.5rem 5%;
+      z-index: 499;
+      flex-direction: column;
+      gap: 1.25rem;
+      transform: translateY(-10px);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .mobile-menu.open {
+      display: flex;
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .mobile-menu a {
+      text-decoration: none;
+      color: var(--dim);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--line);
+      transition: color 0.3s;
+    }
+
+    .mobile-menu a:hover { color: var(--accent); }
+
+    .mobile-menu-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 0.5rem;
+    }
+
+    /* ─── LAYOUT ─── */
     main { max-width: 1000px; margin: 0 auto; padding: 0 2rem; }
-    section { padding: 8rem 0 4rem; border-bottom: 1px solid var(--line); }
 
-    /* Hero Section */
-    .hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; }
-    .hero-meta { color: var(--accent); font-size: 0.7rem; letter-spacing: 4px; margin-bottom: 1rem; }
-    .hero-title { font-family: 'Cinzel'; font-size: clamp(3rem, 8vw, 6rem); line-height: 1; margin-bottom: 1rem; }
-    .hero-desc { font-family: 'IM Fell English'; font-style: italic; font-size: 1.5rem; color: var(--dim); max-width: 600px; }
+    section {
+      padding: 7rem 0 4rem;
+      border-bottom: 1px solid var(--line);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+    }
 
-    /* DICAR Methodology */
+    section.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding-top: 8rem !important;
+    }
+
+    .hero-meta {
+      color: var(--accent);
+      font-size: 0.68rem;
+      letter-spacing: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .hero-title {
+      font-family: 'Cinzel';
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-desc {
+      font-family: 'IM Fell English';
+      font-style: italic;
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: var(--dim);
+      max-width: 560px;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      text-decoration: none;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      transition: all 0.3s;
+      cursor: pointer;
+      background: transparent;
+    }
+
+    .btn:hover { background: var(--accent); color: var(--soot); }
+    .btn.secondary { border-color: var(--dim); color: var(--dim); }
+    .btn.secondary:hover { border-color: var(--paper); color: var(--paper); background: transparent; }
+
+    /* ─── SECTION HEADERS ─── */
+    .section-header { margin-bottom: 3rem; }
+    .section-num { color: var(--accent); font-family: 'Cinzel'; }
+    .section-header h2 { font-family: 'Cinzel'; color: var(--paper); margin-bottom: 0.5rem; }
+    .section-header p { color: var(--dim); font-size: 0.85rem; }
+
+    /* ─── DICAR ─── */
     .dicar-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
       gap: 1rem;
-      margin-top: 3rem;
     }
 
     .dicar-card {
       background: rgba(184, 150, 46, 0.03);
       border: 1px solid var(--line);
       padding: 1.5rem;
-      position: relative;
-      transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+      cursor: default;
     }
 
     .dicar-card:hover {
-      background: rgba(184, 150, 46, 0.08);
+      background: rgba(184, 150, 46, 0.07);
       border-color: var(--accent);
-      transform: translateY(-5px);
+      transform: translateY(-4px);
     }
 
     .dicar-letter {
       font-family: 'Cinzel';
       font-size: 2.5rem;
       color: var(--accent);
-      opacity: 0.5;
+      opacity: 0.45;
+      display: block;
+      margin-bottom: 0.4rem;
+    }
+
+    .dicar-name {
+      font-weight: bold;
+      font-size: 0.88rem;
+      color: var(--paper);
       display: block;
       margin-bottom: 0.5rem;
     }
 
-    .dicar-name { font-weight: bold; font-size: 0.9rem; color: var(--paper); display: block; margin-bottom: 0.5rem; }
-    .dicar-desc { font-size: 0.75rem; color: var(--dim); line-height: 1.4; }
+    .dicar-desc { font-size: 0.73rem; color: var(--dim); line-height: 1.5; }
 
-    /* Arsenal / Tools */
-    .tool-list {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 2rem;
-    }
-    .tool-category h4 { font-family: 'Cinzel'; color: var(--accent); font-size: 0.8rem; margin-bottom: 1rem; border-bottom: 1px solid var(--line); }
-    .tool-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .tag { font-size: 0.7rem; padding: 2px 8px; border: 1px solid var(--dim); color: var(--dim); }
-
-    /* Case Files Style */
+    /* ─── CASES ─── */
     .case-card {
       display: flex;
       justify-content: space-between;
@@ -122,17 +314,145 @@
       margin-bottom: 1rem;
       text-decoration: none;
       color: inherit;
-      transition: 0.3s;
+      transition: all 0.3s;
+      gap: 1rem;
     }
-    .case-card:hover { background: rgba(255,255,255,0.02); border-left: 4px solid var(--accent); }
-    .case-info h3 { font-family: 'IM Fell English'; font-size: 1.2rem; }
-    .case-status { font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); border: 1px solid var(--accent); padding: 2px 6px; }
 
-    /* Footer */
-    footer { padding: 4rem 2rem; text-align: center; font-size: 0.7rem; color: var(--dim); }
+    .case-card:hover {
+      background: rgba(255,255,255,0.02);
+      border-left: 3px solid var(--accent);
+    }
 
+    .case-info h3 {
+      font-family: 'IM Fell English';
+      font-size: 1.15rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .case-info .case-id { font-size: 0.68rem; color: var(--dim); display: block; margin-bottom: 0.4rem; }
+    .case-info p { font-size: 0.78rem; color: var(--dim); }
+
+    .case-status {
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      padding: 3px 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ─── ARSENAL ─── */
+    .tool-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2rem;
+    }
+
+    .tool-category h4 {
+      font-family: 'Cinzel';
+      color: var(--accent);
+      font-size: 0.75rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--line);
+      letter-spacing: 1px;
+    }
+
+    .tool-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+    .tag {
+      font-size: 0.68rem;
+      padding: 3px 9px;
+      border: 1px solid var(--dim);
+      color: var(--dim);
+      transition: all 0.2s;
+    }
+
+    .tag:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ─── CONTACT ─── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+    }
+
+    .contact-links { display: flex; flex-direction: column; gap: 0.8rem; }
+
+    .contact-link {
+      color: var(--paper);
+      text-decoration: none;
+      font-size: 0.83rem;
+      transition: color 0.2s;
+    }
+
+    .contact-link:hover { color: var(--accent); }
+
+    .contact-verify {
+      border-left: 1px solid var(--line);
+      padding-left: 2rem;
+    }
+
+    .contact-verify h4 {
+      font-family: 'Cinzel';
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .contact-verify p {
+      font-size: 0.68rem;
+      color: var(--dim);
+      line-height: 1.9;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: 4rem 2rem;
+      font-size: 0.7rem;
+      color: var(--dim);
+    }
+
+    .footer-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ─── RESPONSIVE ─── */
     @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-status { display: none; }
+      .nav-hamburger { display: flex; }
+
+      main { padding: 0 1.25rem; }
+
+      section { padding: 5rem 0 3rem; }
+      .hero { min-height: 90vh; }
+
+      .dicar-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+      .dicar-card { padding: 1rem; }
+      .dicar-letter { font-size: 1.8rem; }
+
+      .case-card { flex-direction: column; align-items: flex-start; }
+
+      .tool-list { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+
+      .contact-verify { border-left: none; padding-left: 0; border-top: 1px solid var(--line); padding-top: 2rem; }
+
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (max-width: 480px) {
       .dicar-grid { grid-template-columns: 1fr; }
+      .tool-list { grid-template-columns: 1fr; }
+      .hero-cta { flex-direction: column; }
+      .btn { text-align: center; }
     }
   </style>
 </head>
@@ -140,193 +460,362 @@
 
 <nav>
   <a href="#" class="nav-logo">Nx3y // DICAR</a>
-  <ul class="nav-links">
-    <li><a href="#dicar">Methodology</a></li>
-    <li><a href="#cases">Archive</a></li>
-    <li><a href="#arsenal">Arsenal</a></li>
-  </ul>
-  <div style="font-size: 0.6rem; color: var(--success)">● SYSTEM ACTIVE</div>
+
+  <div class="nav-right">
+    <ul class="nav-links">
+      <li><a href="#dicar" data-i18n="nav.methodology">Metodologia</a></li>
+      <li><a href="#cases" data-i18n="nav.archive">Arquivo</a></li>
+      <li><a href="#arsenal" data-i18n="nav.arsenal">Arsenal</a></li>
+      <li><a href="#contact" data-i18n="nav.contact">Contato</a></li>
+    </ul>
+
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('pt')">PT</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+
+    <span class="nav-status">● <span data-i18n="nav.status">SISTEMA ATIVO</span></span>
+  </div>
+
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
+<!-- Mobile Drawer -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#dicar" data-i18n="nav.methodology" onclick="closeMenu()">Metodologia</a>
+  <a href="#cases" data-i18n="nav.archive" onclick="closeMenu()">Arquivo</a>
+  <a href="#arsenal" data-i18n="nav.arsenal" onclick="closeMenu()">Arsenal</a>
+  <a href="#contact" data-i18n="nav.contact" onclick="closeMenu()">Contato</a>
+  <div class="mobile-menu-bottom">
+    <span style="font-size:0.65rem; color: var(--dim);" data-i18n="nav.status">SISTEMA ATIVO</span>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('pt')">PT</button>
+      <button class="lang-btn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+</div>
+
 <main>
-  <!-- Hero -->
+
+  <!-- HERO -->
   <section class="hero">
-    <span class="hero-meta">OSINT & ANALYTICS FRAMEWORK</span>
+    <span class="hero-meta" data-i18n="hero.meta">FRAMEWORK DE OSINT & ANÁLISE</span>
     <h1 class="hero-title">Nx3y</h1>
-    <p class="hero-desc">Transforming fragmented data into actionable intelligence through structured methodologies.</p>
+    <p class="hero-desc" data-i18n="hero.desc">Transformando dados fragmentados em inteligência acionável através de metodologias estruturadas.</p>
+    <div class="hero-cta">
+      <a href="#dicar" class="btn" data-i18n="hero.cta1">Explorar metodologia</a>
+      <a href="#contact" class="btn secondary" data-i18n="hero.cta2">Canal aberto</a>
+    </div>
   </section>
 
-  <!-- DICAR Section -->
+  <!-- DICAR -->
   <section id="dicar">
-    <div style="margin-bottom: 3rem;">
-      <h2 style="font-family: 'Cinzel'; color: var(--accent);">01. DICAR Methodology</h2>
-      <p style="color: var(--dim); font-size: 0.9rem;">My standardized approach to digital investigation.</p>
+    <div class="section-header">
+      <h2><span class="section-num">01. </span><span data-i18n="dicar.title">Metodologia DICAR</span></h2>
+      <p data-i18n="dicar.subtitle">Minha abordagem padronizada para investigação digital.</p>
     </div>
 
     <div class="dicar-grid">
       <div class="dicar-card">
         <span class="dicar-letter">D</span>
-        <span class="dicar-name">Define</span>
-        <p class="dicar-desc">Establishing scope, goals, and legal boundaries of the investigation.</p>
+        <span class="dicar-name" data-i18n="dicar.d.name">Definir</span>
+        <p class="dicar-desc" data-i18n="dicar.d.desc">Estabelecendo escopo, objetivos e limites legais da investigação.</p>
       </div>
       <div class="dicar-card">
         <span class="dicar-letter">I</span>
-        <span class="dicar-name">Ingest</span>
-        <p class="dicar-desc">Collecting raw data from social media, public records, and digital footprints.</p>
+        <span class="dicar-name" data-i18n="dicar.i.name">Ingerir</span>
+        <p class="dicar-desc" data-i18n="dicar.i.desc">Coletando dados brutos de redes sociais, registros públicos e rastros digitais.</p>
       </div>
       <div class="dicar-card">
         <span class="dicar-letter">C</span>
-        <span class="dicar-name">Correlate</span>
-        <p class="dicar-desc">Cross-referencing identities and identifying behavioral patterns.</p>
+        <span class="dicar-name" data-i18n="dicar.c.name">Correlacionar</span>
+        <p class="dicar-desc" data-i18n="dicar.c.desc">Cruzando identidades e identificando padrões comportamentais.</p>
       </div>
       <div class="dicar-card">
         <span class="dicar-letter">A</span>
-        <span class="dicar-name">Analyze</span>
-        <p class="dicar-desc">Refining findings, validating hypotheses, and eliminating noise.</p>
+        <span class="dicar-name" data-i18n="dicar.a.name">Analisar</span>
+        <p class="dicar-desc" data-i18n="dicar.a.desc">Refinando descobertas, validando hipóteses e eliminando ruído.</p>
       </div>
       <div class="dicar-card">
         <span class="dicar-letter">R</span>
-        <span class="dicar-name">Report</span>
-        <p class="dicar-desc">Documenting evidence and determining confidence levels.</p>
+        <span class="dicar-name" data-i18n="dicar.r.name">Reportar</span>
+        <p class="dicar-desc" data-i18n="dicar.r.desc">Documentando evidências e determinando níveis de confiança.</p>
       </div>
     </div>
   </section>
 
-  <!-- Archive -->
+  <!-- CASES -->
   <section id="cases">
-    <h2 style="font-family: 'Cinzel'; color: var(--accent); margin-bottom: 2rem;">02. Case Archive</h2>
-    
-    <div class="case-card">
-      <div class="case-info">
-        <span style="font-size: 0.7rem; color: var(--dim);">FILE-001</span>
-        <h3>Social Correlation Framework</h3>
-        <p style="font-size: 0.8rem; color: var(--dim);">Automated tool for connecting usernames across 300+ platforms.</p>
-      </div>
-      <span class="case-status">In Development</span>
+    <div class="section-header">
+      <h2><span class="section-num">02. </span><span data-i18n="cases.title">Arquivo de Casos</span></h2>
     </div>
 
     <div class="case-card">
       <div class="case-info">
-        <span style="font-size: 0.7rem; color: var(--dim);">FILE-002</span>
-        <h3>Infrastructure RECON</h3>
-        <p style="font-size: 0.8rem; color: var(--dim);">Mapping hidden digital assets via DNS and SSL certificate analysis.</p>
+        <span class="case-id">FILE-001</span>
+        <h3 data-i18n="cases.001.title">Framework de Correlação Social</h3>
+        <p data-i18n="cases.001.desc">Ferramenta automatizada para conectar usernames em 300+ plataformas.</p>
       </div>
-      <span class="case-status">Classified</span>
+      <span class="case-status" data-i18n="cases.status.dev">Em Desenvolvimento</span>
+    </div>
+
+    <div class="case-card">
+      <div class="case-info">
+        <span class="case-id">FILE-002</span>
+        <h3 data-i18n="cases.002.title">RECON de Infraestrutura</h3>
+        <p data-i18n="cases.002.desc">Mapeando ativos digitais ocultos via análise de DNS e certificados SSL.</p>
+      </div>
+      <span class="case-status" data-i18n="cases.status.classified">Classificado</span>
     </div>
   </section>
-<!-- Arsenal (Ajustado) -->
-<section id="arsenal" style="border: none; padding-bottom: 6rem;"> <!-- Adicionei padding-bottom aqui -->
-  <h2 style="font-family: 'Cinzel'; color: var(--accent); margin-bottom: 3rem;">03. The Arsenal</h2>
-  
-  <div class="tool-list"> <!-- Início do Grid -->
 
-    <!-- VETOR: WEB & SEARCH -->
-    <div class="tool-category">
-      <h4>Search Intelligence</h4>
-      <div class="tool-tags">
-        <span class="tag">Google Dorking</span> 
-        <span class="tag">Reverse Image Search</span>
-        <span class="tag">Yandex/PimEyes</span>
-        <span class="tag">Wayback Machine</span>
-      </div>
+  <!-- ARSENAL -->
+  <section id="arsenal" style="border: none;">
+    <div class="section-header">
+      <h2><span class="section-num">03. </span><span data-i18n="arsenal.title">O Arsenal</span></h2>
     </div>
 
-    <!-- VETOR: IDENTITY & SOCIAL -->
-    <div class="tool-category">
-      <h4>Identity Correlation (SOCMINT)</h4>
-      <div class="tool-tags">
-        <span class="tag">Sherlock</span> 
-        <span class="tag">Maigret</span>
-        <span class="tag">Leak Databases</span>
-        <span class="tag">Username Correlation</span>
-      </div>
-    </div>
-
-    <!-- VETOR: INFRASTRUCTURE -->
-    <div class="tool-category">
-      <h4>Network & Infrastructure</h4>
-      <div class="tool-tags">
-        <span class="tag">WHOIS/DNS Recon</span> 
-        <span class="tag">ViewDNS</span>
-        <span class="tag">Censys</span>
-        <span class="tag">Hunter.io</span>
-      </div>
-    </div>
-
-    <!-- VETOR: TECH -->
-    <div class="tool-category">
-      <h4>Technical Stack</h4>
-      <div class="tool-tags">
-        <span class="tag">Python</span> <span class="tag">C++</span> <span class="tag">Linux Terminal</span>
-        <span class="tag">JavaScript</span> <span class="tag">SQL</span>
-      </div>
-    </div>
-
-    <!-- VETOR: HARDWARE -->
-    <div class="tool-category">
-      <h4>Hardware & Ops</h4>
-      <div class="tool-tags">
-        <span class="tag">Cardputer</span> <span class="tag">RF Analysis</span> <span class="tag">Mobile Sensors</span>
-      </div>
-    </div>
-
-  </div> <!-- Fim do Grid (Mova para cá) -->
-</section>
-
-  <!-- Contact & Verification -->
-  <section id="contact" style="border-top: 1px dashed var(--line); padding-top: 4rem;">
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 3rem;">
-      <div>
-        <h4 style="font-family: 'Cinzel'; color: var(--accent); margin-bottom: 1rem;">Open Channel</h4>
-        <p style="font-size: 0.8rem; color: var(--dim); margin-bottom: 1.5rem;">For inquiries, intelligence sharing, or collaboration, use the following secure endpoints:</p>
-        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-          <a href="mailto:nx3y.intel@proton.me" style="color: var(--paper); text-decoration: none; font-size: 0.85rem;">[EMAIL] nx3y.intel@proton.me</a>
-          <a href="https://github.com/nx3y" target="_blank" style="color: var(--paper); text-decoration: none; font-size: 0.85rem;">[GITHUB] github.com/nx3y</a>
+    <div class="tool-list">
+      <div class="tool-category">
+        <h4 data-i18n="arsenal.search">Inteligência de Busca</h4>
+        <div class="tool-tags">
+          <span class="tag">Google Dorking</span>
+          <span class="tag">Reverse Image Search</span>
+          <span class="tag">Search engines</span>
+          <span class="tag">Wayback Machine</span>
+          <span class="tag">Private Tools</span>
         </div>
       </div>
-      
-      <div style="text-align: right; border-left: 1px solid var(--line); padding-left: 2rem;">
-        <h4 style="font-family: 'Cinzel'; color: var(--accent); margin-bottom: 1rem;">Verification</h4>
-        <p style="font-size: 0.7rem; color: var(--dim); font-family: 'Share Tech Mono';">
-          DIGITAL SIGNATURE: MD5_HASH_8F3E92A1...<br>
-          ENCRYPTION: AES-256-GCM<br>
-          STATUS: VERIFIED ANALYST
+
+      <div class="tool-category">
+        <h4 data-i18n="arsenal.identity">Correlação de Identidade (SOCMINT)</h4>
+        <div class="tool-tags">
+          <span class="tag">OSINT Framework</span>
+          <span class="tag">Blackbird</span>
+          <span class="tag">Leak Databases</span>
+          <span class="tag">Username Correlation</span>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h4 data-i18n="arsenal.network">Rede & Infraestrutura</h4>
+        <div class="tool-tags">
+          <span class="tag">WHOIS / DNS Recon</span>
+          <span class="tag">ViewDNS</span>
+          <span class="tag">Censys</span>
+          <span class="tag">Hunter.io</span>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h4 data-i18n="arsenal.tech">Stack Técnico</h4>
+        <div class="tool-tags">
+          <span class="tag">Python</span>
+          <span class="tag">C++</span>
+          <span class="tag">Linux</span>
+          <span class="tag">Automation</span>
+          <span class="tag">Development</span>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h4 data-i18n="arsenal.hardware">Hardware & Operações</h4>
+        <div class="tool-tags">
+          <span class="tag">Cardputer</span>
+          <span class="tag">EMP</span>
+          <span class="tag">Arduino</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" style="border-top: 1px dashed var(--line); border-bottom: none; padding-top: 4rem;">
+    <div class="contact-grid">
+      <div>
+        <h4 style="font-family:'Cinzel'; color:var(--accent); margin-bottom:1rem;" data-i18n="contact.title">Canal Aberto</h4>
+        <p style="font-size:0.8rem; color:var(--dim); margin-bottom:1.5rem;" data-i18n="contact.desc">Para consultas, compartilhamento de inteligência ou colaboração, use os seguintes endpoints seguros:</p>
+        <div class="contact-links">
+          <a href="mailto:nx3y.intel@proton.me" class="contact-link">[EMAIL] nx3y.intel@proton.me</a>
+          <a href="https://github.com/nx3y" target="_blank" class="contact-link">[GITHUB] github.com/nx3y</a>
+        </div>
+      </div>
+
+      <div class="contact-verify">
+        <h4 data-i18n="contact.verify.title">Verificação</h4>
+        <p>
+          <span data-i18n="contact.verify.sig">ASSINATURA DIGITAL</span>: MD5_HASH_8F3E92A1...<br>
+          <span data-i18n="contact.verify.enc">CRIPTOGRAFIA</span>: AES-256-GCM<br>
+          <span data-i18n="contact.verify.status">STATUS</span>: VERIFIED ANALYST
         </p>
       </div>
     </div>
   </section>
+
 </main>
 
 <footer>
-  <div style="max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
-    <div style="text-align: left;">
-      <p style="letter-spacing: 2px;">Nx3y // 2026</p>
-      <p style="font-size: 0.6rem; opacity: 0.4;">Built with HTML5, CSS3, and Investigative Intent.</p>
+  <div class="footer-inner">
+    <div>
+      <p style="letter-spacing:2px;">© Nx3y - 2026</p>
+      <p style="font-size:0.6rem; opacity:0.4;" data-i18n="footer.built">Construído com HTML5, CSS3 e Intenção Investigativa.</p>
     </div>
-    
-    <div style="text-align: right;">
-      <p style="font-size: 0.6rem; opacity: 0.6; text-transform: uppercase;">Development Credits</p>
-      <p style="font-size: 0.7rem;">Architected by <span style="color: var(--accent);">Nx3y</span></p>
+    <div style="text-align:right;">
+      <p style="font-size:0.6rem; opacity:0.6; text-transform:uppercase;" data-i18n="footer.credits">Créditos de Desenvolvimento</p>
+      <p style="font-size:0.7rem;"><span data-i18n="footer.arch">Arquitetado por</span> <span style="color:var(--accent);">Nx3y</span></p>
     </div>
   </div>
 </footer>
 
 <script>
-  const observerOptions = { threshold: 0.1 };
+  /* ─── I18N ─── */
+  const translations = {
+    pt: {
+      "nav.methodology": "Metodologia",
+      "nav.archive": "Arquivo",
+      "nav.arsenal": "Arsenal",
+      "nav.contact": "Contato",
+      "nav.status": "SISTEMA ATIVO",
+      "hero.meta": "FRAMEWORK DE OSINT & ANÁLISE",
+      "hero.desc": "Transformando dados fragmentados em inteligência acionável através de metodologias estruturadas.",
+      "hero.cta1": "Explorar metodologia",
+      "hero.cta2": "Canal aberto",
+      "dicar.title": "Metodologia DICAR",
+      "dicar.subtitle": "Minha abordagem padronizada para investigação digital.",
+      "dicar.d.name": "Definir",
+      "dicar.d.desc": "Estabelecendo escopo, objetivos e limites legais da investigação.",
+      "dicar.i.name": "Ingerir",
+      "dicar.i.desc": "Coletando dados brutos de redes sociais, registros públicos e rastros digitais.",
+      "dicar.c.name": "Correlacionar",
+      "dicar.c.desc": "Cruzando identidades e identificando padrões comportamentais.",
+      "dicar.a.name": "Analisar",
+      "dicar.a.desc": "Refinando descobertas, validando hipóteses e eliminando ruído.",
+      "dicar.r.name": "Reportar",
+      "dicar.r.desc": "Documentando evidências e determinando níveis de confiança.",
+      "cases.title": "Arquivo de Casos",
+      "cases.001.title": "Framework de Correlação Social",
+      "cases.001.desc": "Ferramenta automatizada para conectar usernames em 300+ plataformas.",
+      "cases.002.title": "RECON de Infraestrutura",
+      "cases.002.desc": "Mapeando ativos digitais ocultos via análise de DNS e certificados SSL.",
+      "cases.status.dev": "Em Desenvolvimento",
+      "cases.status.classified": "Classificado",
+      "arsenal.title": "O Arsenal",
+      "arsenal.search": "Inteligência de Busca",
+      "arsenal.identity": "Correlação de Identidade (SOCMINT)",
+      "arsenal.network": "Rede & Infraestrutura",
+      "arsenal.tech": "Stack Técnico",
+      "arsenal.hardware": "Hardware & Operações",
+      "contact.title": "Canal Aberto",
+      "contact.desc": "Para consultas, compartilhamento de inteligência ou colaboração, use os seguintes endpoints seguros:",
+      "contact.verify.title": "Verificação",
+      "contact.verify.sig": "ASSINATURA DIGITAL",
+      "contact.verify.enc": "CRIPTOGRAFIA",
+      "contact.verify.status": "STATUS",
+      "footer.built": "Construído com HTML5, CSS3 e Intenção Investigativa.",
+      "footer.credits": "Créditos de Desenvolvimento",
+      "footer.arch": "Arquitetado por"
+    },
+    en: {
+      "nav.methodology": "Methodology",
+      "nav.archive": "Archive",
+      "nav.arsenal": "Arsenal",
+      "nav.contact": "Contact",
+      "nav.status": "SYSTEM ACTIVE",
+      "hero.meta": "OSINT & ANALYTICS FRAMEWORK",
+      "hero.desc": "Transforming fragmented data into actionable intelligence through structured methodologies.",
+      "hero.cta1": "Explore methodology",
+      "hero.cta2": "Open channel",
+      "dicar.title": "DICAR Methodology",
+      "dicar.subtitle": "My standardized approach to digital investigation.",
+      "dicar.d.name": "Define",
+      "dicar.d.desc": "Establishing scope, goals, and legal boundaries of the investigation.",
+      "dicar.i.name": "Ingest",
+      "dicar.i.desc": "Collecting raw data from social media, public records, and digital footprints.",
+      "dicar.c.name": "Correlate",
+      "dicar.c.desc": "Cross-referencing identities and identifying behavioral patterns.",
+      "dicar.a.name": "Analyze",
+      "dicar.a.desc": "Refining findings, validating hypotheses, and eliminating noise.",
+      "dicar.r.name": "Report",
+      "dicar.r.desc": "Documenting evidence and determining confidence levels.",
+      "cases.title": "Case Archive",
+      "cases.001.title": "Social Correlation Framework",
+      "cases.001.desc": "Automated tool for connecting usernames across 300+ platforms.",
+      "cases.002.title": "Infrastructure RECON",
+      "cases.002.desc": "Mapping hidden digital assets via DNS and SSL certificate analysis.",
+      "cases.status.dev": "In Development",
+      "cases.status.classified": "Classified",
+      "arsenal.title": "The Arsenal",
+      "arsenal.search": "Search Intelligence",
+      "arsenal.identity": "Identity Correlation (SOCMINT)",
+      "arsenal.network": "Network & Infrastructure",
+      "arsenal.tech": "Technical Stack",
+      "arsenal.hardware": "Hardware & Ops",
+      "contact.title": "Open Channel",
+      "contact.desc": "For inquiries, intelligence sharing, or collaboration, use the following secure endpoints:",
+      "contact.verify.title": "Verification",
+      "contact.verify.sig": "DIGITAL SIGNATURE",
+      "contact.verify.enc": "ENCRYPTION",
+      "contact.verify.status": "STATUS",
+      "footer.built": "Built with HTML5, CSS3, and Investigative Intent.",
+      "footer.credits": "Development Credits",
+      "footer.arch": "Architected by"
+    }
+  };
+
+  let currentLang = 'pt';
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.dataset.i18n;
+      if (translations[lang][key]) el.textContent = translations[lang][key];
+    });
+
+    document.querySelectorAll('.lang-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.textContent === lang.toUpperCase());
+    });
+  }
+
+  /* ─── HAMBURGER ─── */
+  function toggleMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const ham = document.getElementById('hamburger');
+    const isOpen = menu.classList.toggle('open');
+    ham.classList.toggle('open', isOpen);
+    ham.setAttribute('aria-label', isOpen ? 'Fechar menu' : 'Abrir menu');
+  }
+
+  function closeMenu() {
+    document.getElementById('mobileMenu').classList.remove('open');
+    document.getElementById('hamburger').classList.remove('open');
+  }
+
+  /* Close on outside click */
+  document.addEventListener('click', e => {
+    const menu = document.getElementById('mobileMenu');
+    const ham = document.getElementById('hamburger');
+    if (menu.classList.contains('open') && !menu.contains(e.target) && !ham.contains(e.target)) {
+      closeMenu();
+    }
+  });
+
+  /* ─── SCROLL REVEAL ─── */
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        entry.target.style.opacity = "1";
-        entry.target.style.transform = "translateY(0)";
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
       }
     });
-  }, observerOptions);
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-  document.querySelectorAll('section').forEach(section => {
-    section.style.opacity = "0";
-    section.style.transform = "translateY(20px)";
-    section.style.transition = "all 0.8s ease-out";
-    observer.observe(section);
+  document.querySelectorAll('section').forEach((s, i) => {
+    s.style.transitionDelay = `${i * 0.05}s`;
+    observer.observe(s);
   });
 </script>
 
